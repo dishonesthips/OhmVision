@@ -26,6 +26,7 @@ FONT = cv2.FONT_HERSHEY_SIMPLEX
 def empty(x): 
     pass
 
+#initializing haar cascade and video source
 def init(DEBUG):
     if (DEBUG):
         cv2.namedWindow("frame")
@@ -51,6 +52,8 @@ def validContour(cnt):
         if (aspectRatio > 0.4):
             return False
     return True
+
+#evaluates the resistance value based on the bands detected
 def printResult(sortedBands, liveimg, resPos):
     x,y,w,h = resPos
     strVal = ""
@@ -65,7 +68,8 @@ def printResult(sortedBands, liveimg, resPos):
     #draw a red rectangle indicating an error reading the bands
     cv2.rectangle(liveimg,(x,y),(x+w,y+h),(0,0,255),2)
     
-def findResistors(liveimg):
+#uses haar cascade to identify resistors in the image
+def findResistors(liveimg, rectCascade):
     gliveimg = cv2.cvtColor(cliveimg, cv2.COLOR_BGR2GRAY)
     resClose = []
 
@@ -81,9 +85,9 @@ def findResistors(liveimg):
 
         if (len(secondPass) != 0):
             resClose.append((np.copy(roi_color),(x,y,w,h)))
-
     return resClose
 
+#analysis close up image of resistor to identify bands
 def findBands(resistorInfo, DEBUG):
     if (DEBUG):
         uh = cv2.getTrackbarPos("uh","frame")
@@ -92,7 +96,6 @@ def findBands(resistorInfo, DEBUG):
         lh = cv2.getTrackbarPos("lh","frame")
         ls = cv2.getTrackbarPos("ls","frame")
         lv = cv2.getTrackbarPos("lv","frame")
-
     #enlarge image
     resImg = cv2.resize(resistorInfo[0], (400, 200))
     resPos = resistorInfo[1]
@@ -141,19 +144,16 @@ def findBands(resistorInfo, DEBUG):
     return sorted(bandsPos, key=lambda tup: tup[0])
 
 
-
-
+#MAIN
 cap,rectCascade = init(DEBUG)
 
 while(not (cv2.waitKey(1) == ord('q'))):
     ret, cliveimg = cap.read()
-    resClose = findResistors(cliveimg)
+    resClose = findResistors(cliveimg, rectCascade)
     for i in range(len(resClose)):
         sortedBands = findBands(resClose[i],DEBUG)
         printResult(sortedBands, cliveimg, resClose[i][1])
     cv2.imshow("Frame",cliveimg)
-
-
 cap.release()
 cv2.destroyAllWindows()
 
