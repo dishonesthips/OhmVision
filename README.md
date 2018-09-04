@@ -24,4 +24,4 @@ Above is the final result.
 Cameras have a hard time picking up the reflective bands. Depending on the lighting, the bands may look white or even the colour of nearby objects. It is for this reason that the tolerance is not calculated.
 
 ![Screenshot](https://raw.githubusercontent.com/dishonesthips/OhmVision/master/images/error.jpg)<br />
-A resistor will be highlighted red if too many or too few colours are detected. This indicates that either the pre-defined colour ranges need to be tweaked or the camera white balance.
+A resistor will be highlighted red if too many or too few colours are detected. This indicates that either the pre-defined colour ranges  or the camera white balance needs to be tweaked.
